@@ -1,0 +1,84 @@
+
+
+<tal:block tal:define="
+	objects  python:here.getDmdRoot('Devices').getSubDevices(
+	           lambda x:  x.startDate()+90>DateTime() and x.endDate()+0>DateTime() and eventClass('/Status/Ping'));
+    tableName string:availabilitytable;
+    tm here/ZenTableManager;
+    tableState python:tm.getTableState(tableName,  
+                                       sortedSence='asc',
+                                       sortedHeader='availability');
+    zem python:here.dmd.ZenEventManager;
+    sts python:tm.setReqTableState;
+   
+    generate python:tm.setTableState(tableName, 'generate',  
+ 	    (tm.getReqTableState(tableName, 'generate') and  
+ 	    not tm.getReqTableState(tableName, 'adapt')));
+
+    objects python:zem.getAvailability(tableState) if generate else [];
+    batch python:tm.getBatch(tableName,objects);
+	exportFields python:['device', 'component', 'availability'];
+	">
+	
+<tal:block metal:use-macro="here/reportMacros/macros/exportableReport">
+<tal:block metal:fill-slot="report">
+
+<tal:block metal:use-macro="here/templates/macros/page1">
+<tal:block metal:fill-slot="breadCrumbPane">
+    <span metal:use-macro="here/miscmacros/macros/reportBreadCrumbsList"/>    
+</tal:block>
+<tal:block metal:fill-slot="contentPane">
+
+<script type="text/javascript" 
+        src="/zport/portal_skins/zenmodel/datePicker.js">
+</script>
+
+<script type="text/javascript">
+    addDateRange('startDate', 'endDate');
+</script>
+
+<form method="POST" tal:attributes="action request/URL;"
+			tal:define="tabletitle string:Device Availability;
+                        showfilterbox python:True;
+						tblcolspan string:4">
+<tal:block metal:use-macro="here/zenuimacros/macros/zentable">
+<tal:block metal:fill-slot="zentablecontents">
+
+  <tr>
+    <th tal:replace="structure python:tm.getTableHeader(
+                          tableName,'title','Device')"/>
+    <th tal:replace="structure python:tm.getTableHeader(
+                          tableName,'systems','Systems')"/>
+    <th tal:replace="structure python:tm.getTableHeader(
+                          tableName,'availability','Availability')"/>
+  </tr>
+  <tal:block tal:repeat="avail batch">
+    <tr tal:define="dev python:avail.getDeviceLink();"
+    >
+      <td class="tablevalues"
+          tal:condition="dev"
+          tal:content="structure dev"/>
+      <td class="tablevalues"
+          tal:condition="not:dev"
+          tal:content="avail/device"/>
+      <td class="tablevalues" 
+		  tal:content="avail/systems" />
+      <td class="tablevalues" tal:content="avail/floatStr"/>
+   </tr>
+  </tal:block>
+  <tr>
+      <td colspan="5" class="tableheader" align='center'>
+      <form metal:use-macro="here/zenTableNavigation/macros/navtool"/>
+      </td>
+  </tr>
+
+</tal:block>
+</tal:block>
+</form>
+</tal:block>
+</tal:block>
+
+
+</tal:block>
+</tal:block>
+</tal:block>
