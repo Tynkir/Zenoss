@@ -1,0 +1,46 @@
+--start=now-4h
+CDEF:temp=MemoryAvailableBytes
+VDEF:avg=temp,AVERAGE
+VDEF:stdev=temp,STDEV
+CDEF:norm=avg,temp,stdev,3,*,+,LE,temp,UNKN,IF
+AREA:temp#FF0000:Bottom 1% \t
+AREA:norm#0099FF:Memory Available \l
+VDEF:slope=MemoryAvailableBytes,LSLSLOPE
+VDEF:cons=MemoryAvailableBytes,LSLINT
+CDEF:leastsquareline=MemoryAvailableBytes,POP,slope,COUNT,*,cons,+
+LINE2:leastsquareline#0000FF::dashes=6
+GPRINT:norm:LAST:cur\:%5.2lf%s 
+GPRINT:norm:AVERAGE:avg\:%5.2lf%s 
+GPRINT:temp:MIN:min\:%5.2lf%s \l
+
+
+--start=now-24h
+CDEF:temp=MemoryAvailableBytes
+VDEF:avg=temp,AVERAGE
+VDEF:stdev=temp,STDEV
+CDEF:norm=avg,temp,stdev,3,*,+,LE,temp,UNKN,IF
+AREA:temp#FF0000:Bottom 1% \t
+AREA:norm#0099FF:Memory Available \l
+VDEF:slope=MemoryAvailableBytes,LSLSLOPE
+VDEF:cons=MemoryAvailableBytes,LSLINT
+CDEF:leastsquareline=MemoryAvailableBytes,POP,slope,COUNT,*,cons,+
+GPRINT:norm:LAST:cur\:%5.2lf%s 
+GPRINT:norm:AVERAGE:avg\:%5.2lf%s 
+GPRINT:temp:MIN:min\:%5.2lf%s \l
+
+
+--start=now-7d
+CDEF:temp=MemoryAvailableBytes
+VDEF:avg=temp,AVERAGE
+VDEF:stdev=temp,STDEV
+CDEF:norm=avg,temp,stdev,3,*,+,LE,temp,UNKN,IF
+AREA:temp#FF0000:Bottom 1% \t
+AREA:norm#0099FF:Memory Available \l
+VDEF:slope=MemoryAvailableBytes,LSLSLOPE
+VDEF:cons=MemoryAvailableBytes,LSLINT
+CDEF:leastsquareline=MemoryAvailableBytes,POP,slope,COUNT,*,cons,+
+GPRINT:norm:LAST:cur\:%5.2lf%s 
+GPRINT:norm:AVERAGE:avg\:%5.2lf%s 
+GPRINT:temp:MIN:min\:%5.2lf%s \l
+
+A9F5E1
