@@ -1,0 +1,43 @@
+--start=n-4h
+CDEF:temp=ProcessorTotalProcessorTime
+VDEF:avg=temp,AVERAGE
+VDEF:stdev=temp,STDEV
+CDEF:norm=temp,avg,stdev,3,*,+,LE,temp,UNKN,IF
+AREA:temp#FF0000:Top 1% \t
+AREA:norm#FF9900:Normal Range \t
+GPRINT:norm:LAST:cur\:%5.2lf%%
+GPRINT:norm:AVERAGE:avg\:%5.2lf%% 
+GPRINT:norm:MAX:max\:%5.2lf%% \l
+VDEF:slope=ProcessorTotalProcessorTime,LSLSLOPE
+VDEF:cons=ProcessorTotalProcessorTime,LSLINT
+CDEF:leastsquareline=ProcessorTotalProcessorTime,POP,slope,COUNT,*,cons,+
+LINE2:leastsquareline#0000FF::dashes=6
+
+--start=n-24h
+CDEF:temp=ProcessorTotalProcessorTime
+VDEF:avg=temp,AVERAGE
+VDEF:stdev=temp,STDEV
+CDEF:norm=temp,avg,stdev,3,*,+,LE,temp,UNKN,IF
+AREA:temp#FF0000:Top 1% \t
+AREA:norm#FF9900:Normal Range \t
+GPRINT:norm:LAST:cur\:%5.2lf%%
+GPRINT:norm:AVERAGE:avg\:%5.2lf%% 
+GPRINT:norm:MAX:max\:%5.2lf%% \l
+VDEF:slope=ProcessorTotalProcessorTime,LSLSLOPE
+VDEF:cons=ProcessorTotalProcessorTime,LSLINT
+CDEF:leastsquareline=ProcessorTotalProcessorTime,POP,slope,COUNT,*,cons,+
+
+
+--start=n-7d
+CDEF:temp=ProcessorTotalProcessorTime
+VDEF:avg=temp,AVERAGE
+VDEF:stdev=temp,STDEV
+CDEF:norm=temp,avg,stdev,3,*,+,LE,temp,UNKN,IF
+AREA:temp#FF0000:Top 1% \t
+AREA:norm#FF9900:Normal Range \t
+GPRINT:norm:LAST:cur\:%5.2lf%%
+GPRINT:norm:AVERAGE:avg\:%5.2lf%% 
+GPRINT:norm:MAX:max\:%5.2lf%% \l
+VDEF:slope=ProcessorTotalProcessorTime,LSLSLOPE
+VDEF:cons=ProcessorTotalProcessorTime,LSLINT
+CDEF:leastsquareline=ProcessorTotalProcessorTime,POP,slope,COUNT,*,cons,+
