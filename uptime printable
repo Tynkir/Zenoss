@@ -1,0 +1,95 @@
+<tal:block tal:define="
+	objects  python:here.getDmdRoot('Devices').getSubDevices();
+	tableName string: alldevicereport;
+	batch python:here.ZenTableManager.getBatch(tableName,objects);">
+<tal:block metal:use-macro="here/reportMacros/macros/exportableReport">
+<tal:block metal:fill-slot="report">
+	<tal:block metal:use-macro="here/templates/macros/page1">
+	<tal:block metal:fill-slot="breadCrumbPane">
+	    <span metal:use-macro="here/miscmacros/macros/reportBreadCrumbsList"/>    
+	</tal:block>
+	<tal:block metal:fill-slot="contentPane">
+
+<script language="javascript" type="text/javascript">
+var absoluteUrlPath = "/zport/dmd/Reports/Custom%20Device%20Reports/Uptime%20Report/viewDeviceReport?filter=&batchSize=207&zenScreenName=viewDeviceReport&tableName=Uptime%20Report&showAll=show%20all//viewMultiGraphReportClean?submitted=true";
+var reportId = "/zport/dmd/Reports/Custon Device Reports/Uptime Report";
+</script>
+<form method="post" target="_blank" id="printableForm" action="/zport/dmd/Reports/Custom%20Device%20Reports/Uptime%20Report/viewDeviceReport?filter=&batchSize=207&zenScreenName=viewDeviceReport&tableName=Uptime%20Report&showAll=show%20all//viewMultiGraphReportClean?submitted=true">
+</form>
+<script language="javascript" type="text/javascript">
+var ZenGraphs = [];
+
+function CreateFormField(theForm, name, value) {
+    var newField = document.createElement('INPUT');
+    newField.setAttribute('type', 'HIDDEN');
+    newField.setAttribute('name', name);
+    newField.setAttribute('value', value);
+    theForm.appendChild(newField);
+}
+
+function ShowPrintable() {
+    printbleFrm = document.getElementById('printableForm');
+    while (printbleFrm.hasChildNodes())
+        printbleFrm.removeChild(printbleFrm.firstChild);
+    var numGraphs = 0;
+    for (var name in ZenGraphs) {
+        if (ZenGraphs.hasOwnProperty(name)) {
+            var graph = ZenGraphs[name],
+                title = graph[1];
+            var graph = document.getElementById('graph_' + numGraphs);
+            CreateFormField(printbleFrm, 'graph_' + numGraphs, graph.src);
+            CreateFormField(printbleFrm, 'title_' + numGraphs, title);
+            numGraphs++;
+        }
+    }
+    CreateFormField(printbleFrm, 'numGraphs', numGraphs);
+
+    var drange = document.getElementById('drange_select');
+    if (drange) {
+       var selected = drange.options[drange.selectedIndex].value;
+       if (selected) {
+           CreateFormField(printbleFrm, 'drange', selected);
+       }
+    }
+    printbleFrm.submit();
+}
+</script>
+		<form method="POST" tal:attributes="action request/URL;"
+					tal:define="tabletitle string:All Devices;
+		                        showfilterbox python:True;
+								tblcolspan string:3">
+		<tal:block metal:use-macro="here/zenuimacros/macros/zentable">
+		<tal:block metal:fill-slot="zentablecontents">
+
+<input class="tableheader" type="button" value="Printable" onclick="ShowPrintable()" style="margin-left:2em;" autocomplete="off">
+
+    <tr>
+
+        <th tal:replace="structure python:here.ZenTableManager.getTableHeader(
+                            tableName,'primarySortKey','Name')"/>
+        <th tal:replace="structure python:here.ZenTableManager.getTableHeader(
+                    tableName,'uptimeStr','Uptime','cmp')"/>
+
+	</tr>
+	<tr tal:repeat="device batch">
+		<td class="tablevalues" align="left">
+            <a class="tablevalues" tal:attributes="href device/getDeviceUrl"
+                tal:content="device/titleOrId">device</a>
+        </td>
+		<td class="tablevalues" tal:content="device/uptimeStr"/>
+    </tr>
+    <tr>
+        <td colspan="3" class="tableheader" align='center'>
+            <span metal:use-macro="here/zenTableNavigation/macros/navtool" />
+        </td>
+    </tr>
+		
+		</tal:block>
+		</tal:block>
+		</form>
+	
+	</tal:block>
+	</tal:block>
+</tal:block>
+</tal:block>
+</tal:block>
